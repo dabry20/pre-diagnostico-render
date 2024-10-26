@@ -85,7 +85,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': '1234',
         'HOST': '127.0.0.1',
-        'DATEBASE_PORT': '5432',
+        'PORT': '5432',
     }
 }
 
@@ -126,9 +126,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 if not DEBUG:
-    STATIC_URL = os.path.join(BASE_DIR, 'staticfiles')
-    STATICFILES_STORE= 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
+    STATIC_URL = '/static/'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
