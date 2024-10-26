@@ -1,0 +1,146 @@
+{% extends "prediagnostico/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<link href="{% static 'prediagnostico/css/historial.css' %}" rel="stylesheet">
+
+<body>
+
+<div id="overlay" onclick="cerrarPanel()" style="display: none;"></div>
+<div id="form-panel" style="display: none;">
+    <h3>Responde las siguientes interrogantes</h3>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="historial_id" id="historial_id">  <!-- Campo oculto para el ID del historial -->
+        
+        <label for="p1" style="font-weight: bold; font-size: 20px; font-family: 'Times New Roman', Times, serif;">¿Fuiste a realizarte un examen médico?</label><br>
+        {{ form.pregunta1.label }} {{ form.pregunta1 }}<br>
+        
+        <label for="p2" style="font-weight: bold; font-size: 20px; font-family: 'Times New Roman', Times, serif;">¿Nuestro pre-diagnóstico fue acertado?</label><br>
+        {{ form.pregunta2.label }} {{ form.pregunta2 }}<br>
+        
+        <label for="p3" style="font-weight: bold; font-size: 20px; font-family: 'Times New Roman', Times, serif;">De no ser acertado el pre-diagnóstico, ¿Cuál fue la enfermedad que tuviste?</label><br>
+        {{ form.pregunta3.label }} {{ form.pregunta3 }}
+        
+        <button type="submit">Enviar</button>
+        <button type="button" onclick="cerrarPanel()">Cerrar</button>
+    </form>
+</div>
+
+<!-- Panel de notificación -->
+<div id="notification-panel" style="display: none; position: fixed; top: 20%; left: 50%; transform: translateX(-50%); padding: 20px; border-radius: 5px; z-index: 1000; color: white; font-size: 24px;">
+</div>
+
+<!-- Filtros para la tabla -->
+<h2>Registro de exámenes realizados</h2>
+<form method="get" action="{% url 'Historial' %}">
+    <div style="margin-left: 80px; display: flex; gap: 60px; align-items: center; font-size: 25px; font-weight: bold; color: #0c2647;">
+        <div>
+            <label for="fecha-desde">Fecha desde:</label>
+            <input style="background-color: #ffffff98;" type="date" name="fecha_desde" id="fecha-desde" value="{{ fecha_desde }}">
+        </div>
+        <div>
+            <label for="fecha-hasta">Fecha hasta:</label>
+            <input style="background-color: #ffffff98;" type="date" name="fecha_hasta" id="fecha-hasta" value="{{ fecha_hasta }}">
+        </div>
+        <div>
+            <button type="submit" style="margin-top: 0;">Filtrar</button>
+        </div>
+    </div>
+</form>
+
+<!-- Tabla de registros -->
+<table style="text-align: center;">
+    <thead>
+        <tr>
+            <th>Fecha del examen</th>
+            <th>Fiebre alta repentina</th>
+            <th>Fuerte dolor de cabeza</th>
+            <th>Dolor y cansancio de ojos</th>
+            <th>Dolores musculares</th>
+            <th>Sabor metálico en la boca</th>
+            <th>Perdida de apetito</th>
+            <th>Dolor abdominal intenso</th>
+            <th>Nauseas y vómitos</th>
+            <th>Diarrea</th>
+            <th>Otros síntomas</th>
+            <th>Resultado</th>
+            <th>Test de verificación</th>
+            <th>Ver</th> <!-- Nueva columna "Ver" -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for dato in datos_historial %}
+        <tr>
+            <td>{{ dato.fexamen }}</td>
+            <td>{{ dato.fiebre }}</td>
+            <td>{{ dato.dcabeza }}</td>
+            <td>{{ dato.dojos }}</td>
+            <td>{{ dato.dmuscular }}</td>
+            <td>{{ dato.sboca }}</td>
+            <td>{{ dato.papetito }}</td>
+            <td>{{ dato.dabdominal }}</td>
+            <td>{{ dato.nauseas }}</td>
+            <td>{{ dato.diarrea }}</td>
+            <td>{{ dato.otros }}</td>
+            <td>{{ dato.resultado }}</td>
+            <td>
+                {% if dato.test_realizado %}
+                    <button disabled style="font-weight: bold; color: white; background-color: #0ca83e;">Test realizado</button>
+                {% else %}
+                    <button href="javascript:void(0);" onclick="mostrarFormulario('{{ dato.id }}')" style="color: #ffffff; font-size: 22px; font-weight: bold; background-color: #ce7676;">Realizar test</button>
+                {% endif %}
+            </td>
+            <td>
+                <button onclick="verDetalles('{{ dato.id }}', '{{ dato.resultado|lower }}')" style="color: #ffffff; font-size: 22px; font-weight: bold; background-color: #007bff;">Ver</button> <!-- Botón "Ver" -->
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No hay historial disponible.</td> <!-- Actualiza el colspan a 6 -->
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    function mostrarFormulario(historialId) {
+        document.getElementById('historial_id').value = historialId;  // Establece el ID del historial en el campo oculto
+        document.getElementById('overlay').style.display = 'block'; // Mostrar fondo oscuro
+        document.getElementById('form-panel').style.display = 'block'; // Mostrar panel del formulario
+    }
+
+    function cerrarPanel() {
+        document.getElementById('overlay').style.display = 'none'; // Ocultar fondo oscuro
+        document.getElementById('form-panel').style.display = 'none'; // Ocultar panel del formulario
+        document.getElementById('notification-panel').style.display = 'none'; // Ocultar panel de notificación
+    }
+
+    function verDetalles(historialId, resultado) {
+        let mensaje;
+        let contenido;
+
+        if (resultado=="true") {
+            mensaje = "♦ Acude de inmediato a un centro de salud o médico<br>" +
+                      "♦ Mantente hidratado.<br>" +
+                      "♦ Toma medicamentos recetados por tu médico, no te automediques.";
+            contenido = `<strong>Recomendaciones:</strong><br>${mensaje}`;
+            document.getElementById('notification-panel').style.backgroundColor = "red";
+        } else {
+            mensaje = "♦ Toma medidas preventivas contra los mosquitos, como: usar repelente, ropa que cubra brazos y piernas.<br>" +
+                      "♦ Infórmate sobre los signos de alarma del dengue.";
+            contenido = `<strong>Recomendaciones:</strong><br>${mensaje}`;
+            document.getElementById('notification-panel').style.backgroundColor = "green";
+        }
+
+        const notificationPanel = document.getElementById('notification-panel');
+        notificationPanel.innerHTML = `${contenido}<br><button class="panelreco" onclick="cerrarPanel()" >Aceptar</button>`; // Añadir botón "Aceptar"
+        notificationPanel.style.display = 'block';
+
+        // setTimeout(() => {
+        //     notificationPanel.style.display = 'none'; // Oculta el panel después de 5 segundos
+        // }, 5000); // Cambiar de 3000 a 5000
+    }
+</script>
+{% endblock %}

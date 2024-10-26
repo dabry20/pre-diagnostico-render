@@ -1,0 +1,78 @@
+{% extends "prediagnostico/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<link href="{% static 'prediagnostico/css/home.css' %}" rel="stylesheet">
+<div class="container">
+  <div class="panel panel-1" >
+      <!-- Contenido del panel 1 (si es necesario) -->
+  </div>
+  <div class="panel panel-2">
+      <div class="formulario">
+          <h2>Selecciona los síntomas presentados</h2><br>
+          <!-- {% if messages %}
+              <div class="alert alert-success">
+                  <ul>
+                      {% for message in messages %}
+                          <li>{{ message }}</li>
+                      {% endfor %}
+                  </ul>
+              </div>
+          {% endif %} -->
+          
+          <form id="myForm" method="post" onsubmit="return validateAllCheckboxes()">
+              {% csrf_token %}
+              <div class="home-container">
+                  <div class="home-form">
+                      <div class="form">
+                          {{ form.as_p }}
+                          <br>
+                          <button type="submit"><span class="save-icon"></span> Evaluar</button>
+                      </div>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<!-- Panel flotante para el mensaje de resultado -->
+<div id="overlay" onclick="cerrarPanel()" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+
+<div id="mensaje-panel" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 1px solid #ddd; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); z-index: 1000;">
+  <h3>Resultado de la Predicción</h3>
+  <p id="mensaje-text"></p>
+  <button type="button" onclick="cerrarPanel()">Cerrar</button>
+</div>
+
+<script>
+  function mostrarMensaje(fondoColor) {
+      document.getElementById('overlay').style.display = 'block';
+      const mensajePanel = document.getElementById('mensaje-panel');
+      mensajePanel.style.display = 'block';
+      mensajePanel.style.backgroundColor = fondoColor; // Establecer el color de fondo
+  }
+
+  function cerrarPanel() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('mensaje-panel').style.display = 'none';
+  }
+
+  // Mensaje de resultado
+  document.addEventListener("DOMContentLoaded", function() {
+      var mensaje = "{{ mensaje|escapejs }}"; // Escapar el mensaje para evitar problemas con JavaScript
+      if (mensaje) {
+          document.getElementById('mensaje-text').innerText = mensaje; // Establecer el texto del mensaje
+          // Determinar el color del fondo
+          var fondoColor = mensaje.includes("Usted posiblemente NO esta infectado de dengue.") ? "red" : "green"; // Verde para negativo, rojo para positivo
+          mostrarMensaje(fondoColor); // Mostrar el panel con el color adecuado
+      }
+  });
+</script>
+
+
+
+{% endblock%}
+
+

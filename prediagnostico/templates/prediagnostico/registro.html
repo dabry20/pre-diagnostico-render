@@ -1,0 +1,86 @@
+
+<body>
+  {% load static %}
+  <link href="{% static 'prediagnostico/css/registro.css' %}" rel="stylesheet">
+  <h1> <span><img src="{%static 'prediagnostico/img/LOGO05.png'%}" ></span> Pre-diagnóstico temp<span class="cont">rano del dengue</span></h1><br>
+
+  <div class="container">
+    
+    <div class="panel panel-1">
+     
+    </div>
+    <div class="panel panel-2">
+        
+      <div class="panel-body">
+        <h2>Registro de paciente</h2>
+        
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-grid">
+              <div>
+                  <label for="nombre">Nombre:</label>
+                  {{ form.nombre }}
+              </div>
+              <div>
+                  <label for="apePaterno">Apellido Paterno:</label>
+                  {{ form.apePaterno }}
+              </div>
+              <div>
+                  <label for="apeMaterno">Apellido Materno:</label>
+                  {{ form.apeMaterno }}
+              </div>
+              <div>
+                  <label for="documento">DNI:</label>
+                  {{ form.documento }}
+              </div>
+
+              <div>
+                  <label for="fnacimiento">Fecha de Nacimiento:</label>
+                  {{ form.fnacimiento }}
+              </div>
+              <div>
+                <label for="fnacimiento">Correo:</label>
+                {{ form.correo }}
+            </div>
+              <div>
+                  <label for="contra">Contraseña:</label>
+                  {{ form.contra }}
+              </div>
+              <div>
+                  <label for="genero">Género:</label>
+                  {{ form.genero }}
+              </div>
+          </div>
+          
+          <!-- Contenedor de botones alineados -->
+          <div style="display: flex; gap: 10px; margin-top: 20px;">
+              <button type="submit" style="padding: 10px 20px;">Guardar</button>
+              
+          </div>
+        </form>
+  
+      </div>
+    </div>
+  </div>
+
+</body>
+<footer class="footer text-faded text-center ">
+  
+  <p class="m-0 mbt1">&copy; DENSYMP-2024  <span class="dav">B.M.A</span> </p>
+
+</footer>
+
+
+
+  <script>
+document.addEventListener('DOMContentLoaded', (event) => {
+    const input = document.querySelector('input[name="documento"]');
+    input.addEventListener('keypress', (evt) => {
+        // Permitir solo números
+        if (evt.which < 48 || evt.which > 57) {
+            evt.preventDefault();
+        }
+    });
+});
+</script>

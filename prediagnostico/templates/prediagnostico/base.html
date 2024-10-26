@@ -1,0 +1,68 @@
+<html>
+  <head>
+    {% load static %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="{% static 'prediagnostico/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet">
+    <link href="{% static 'prediagnostico/css/gestion.css' %}" rel="stylesheet">
+  </head>
+
+  <body>
+    <div style="display: flex; align-items: center;">
+      <h1 style="margin-left: 350px;">
+          <span>
+              <img src="{% static 'prediagnostico/img/LOGO05.png' %}" alt="Logo" style="width: 50px; height: auto; margin-right: 10px;">
+          </span>
+          Pre-diagnóstico temp<span class="cont">rano del dengue</span>
+      </h1>
+      <li class="nav-item {% if '/test' in request.path %} active {% endif %} px-lg-4" style="list-style: none; margin-left: 20px;">
+          <a id="toggle-profile" style="margin-left: 400px; color:aliceblue;" class="nav-link text-uppercase text-expanded" href="{% url 'Vista'%}">
+              <img src="{% static 'prediagnostico/img/user01.png' %}" style="width: 50px; height: 50px; margin-right: 8px;" alt="User Icon">MI PERFIL
+          </a>
+      </li>
+    </div>
+
+    
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand text-uppercase text-expanded font-weight-bold d-lg-none" href="{% url 'Home'%}">Gestión de Pedidos</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item {% if '/home' in request.path %} active {% endif %} px-lg-4">
+              <a class="nav-link text-uppercase text-expanded" href="{% url 'Home'%}">Pre-diagnostico</a>
+            </li>
+            <li class="nav-item {% if '/historial' in request.path %} active {% endif %} px-lg-4">
+              <a class="nav-link text-uppercase text-expanded" href="{% url 'Historial'%}">Historial</a>
+            </li>
+            <li class="nav-item {% if request.path == '/Historial' %}active {%endif%} px-lg-4">
+              <a class="nav-link text-uppercase text-expanded" style="color: brown; font-weight: bold; margin-left:100px;" href="{% url 'login'%}">Salir</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- CONTENIDO QUE VA A CAMBIAR -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer text-faded text-center ">
+        <p class="m-0 mbt1">&copy; DENSYMP-2024 <span class="dav">B.M.A</span> </p>
+    </footer>
+
+    <!-- Bootstrap -->
+    <script src="{% static 'prediagnostico/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'prediagnostico/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    
+
+  </body>
+</html>

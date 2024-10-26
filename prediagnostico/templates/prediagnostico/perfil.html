@@ -1,0 +1,81 @@
+{% extends "prediagnostico/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<link href="{% static 'prediagnostico/css/perfil.css' %}" rel="stylesheet">
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{% static 'prediagnostico/img/LOGO06.png' %}" alt="Logo" class="img-fluid"> <!-- Clase para hacer la imagen responsiva -->
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-2">
+                <h1>Mi Perfil</h1>
+                <form id="patient-form" method="POST" action="{% url 'Editar_paciente' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" name="nombre" value="{{ paciente.nombre }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Apellido Paterno</label>
+                        <input type="text" class="form-control" name="apePaterno" value="{{ paciente.apePaterno }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Apellido Materno</label>
+                        <input type="text" class="form-control" name="apeMaterno" value="{{ paciente.apeMaterno }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>N° DNI</label>
+                        <input type="text" class="form-control" name="documento" value="{{ paciente.documento }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" name="fnacimiento" value="{{ paciente.fnacimiento|date:'Y-m-d' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Correo Electrónico</label>
+                        <input type="email" class="form-control" name="correo" value="{{ paciente.correo }}" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                   
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>.container {
+    display: flex;
+    align-items: center; /* Centra verticalmente los elementos */
+    
+}
+
+.img-fluid {
+    max-width: 250%; /* Asegura que la imagen no exceda el ancho del contenedor */
+    height: auto; /* Mantiene la relación de aspecto */
+    margin-top: 60px;
+
+}
+
+.panel-2 {
+    padding: 20px; /* Espaciado interno */
+    width: 500px;
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #f9f9f991; /* Color de fondo */
+    margin-top: 40px;
+    margin-bottom: 42px;
+    margin-left: 200px;
+    box-shadow: 0 7px 50px rgb(6, 42, 71);
+}
+
+label{
+    font-weight: bold;
+    font-size: 20px;
+}
+</style>
+
+
+{% endblock%}

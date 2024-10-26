@@ -1,0 +1,42 @@
+<body>
+    {% load static %}
+    <link href="{% static 'prediagnostico/css/recuperar.css' %}" rel="stylesheet">
+    <h1> <span><img src="{%static 'prediagnostico/img/LOGO05.png'%}" ></span> Pre-diagnóstico temp<span class="cont">rano del dengue</span></h1><br>
+    <div class="container">
+      <div class="panel panel-1">
+      </div>
+      <div class="panel panel-2">
+          
+        <div class="formulario">
+            <h2>Recuperación de Contraseña</h2>
+            
+                <div class="formulario">
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="email-input">
+                            <input type="email" placeholder="Ingresa Correo Electrónico" name="correo" id="correo" required>
+                        </div>
+                        <button type="submit">Enviar</button>
+                        <div>
+                            <a class="lintex" href="{% url 'login' %}">Volver al Inicio de Sesión</a>
+                        </div>
+                        {% if error %}
+                        <p style="color: red;">{{ error }}</p>
+                        {% endif %}
+                        {% if success %}
+                        <p style="color: green;">{{ success }}</p>
+                        {% endif %}
+                    </form>
+                
+            </div>
+      </div>
+      </div>
+    </div>
+    </body>
+    <footer class="footer text-faded text-center ">
+      <p class="m-0 mbt1">&copy; DENSYMP-2024  <span class="dav">B.M.A</span> </p>
+</footer>
+    
+    </footer>
+    

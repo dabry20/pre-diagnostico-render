@@ -1,0 +1,33 @@
+.container {
+    display: flex;
+    align-items: center; /* Centra verticalmente los elementos */
+    
+}
+
+.img-fluid {
+    max-width: 250%; /* Asegura que la imagen no exceda el ancho del contenedor */
+    height: auto; /* Mantiene la relación de aspecto */
+    margin-top: 60px;
+
+}
+
+.panel-2 {
+    padding: 20px; /* Espaciado interno */
+    width: 500px;
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #f9f9f991; /* Color de fondo */
+    margin-top: 40px;
+    margin-bottom: 42px;
+    margin-left: 200px;
+    box-shadow: 0 7px 50px rgb(6, 42, 71);
+}
+
+label{
+    font-weight: bold;
+    font-size: 20px;
+}
+
+
+button{
+    margin-left: 150px;
+}

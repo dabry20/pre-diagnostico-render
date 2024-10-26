@@ -1,0 +1,114 @@
+
+    h2 {
+        text-align: left;
+        margin-top: 30px;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+        font-size: 40px;
+        color: #f7f7f7e5;
+        
+    }
+    body {
+        font-family: Arial, sans-serif;
+        
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 35px;
+    }
+    thead {
+    background-color: #076ad38c; /* Azul intenso */
+    color: rgb(244, 245, 248); /* Color del texto en el encabezado */
+    }
+    tbody {
+    background-color: #ffffff8f;
+    font-size: 20px; /* Azul menos intenso */
+    }
+    
+    th, td {
+        border: 1px solid #076ad3;
+        padding: 8px;
+    }
+    /* th {
+        background-color: #f2f2f2;
+    } */
+    /* Estilos para el panel flotante */
+    #form-panel {
+        display: none; /* Inicialmente oculto */
+        position: fixed; /* Fijo en la pantalla */
+        top: 50%; /* Centrado verticalmente */
+        left: 50%; /* Centrado horizontalmente */
+        transform: translate(-50%, -50%); /* Ajustar la posición al centro */
+        border: 1px solid #0752b3;
+        padding: 20px;
+        background: linear-gradient(rgba(36, 210, 216, 0.363), rgba(12, 128, 236, 0.562)), rgb(255, 255, 255) ;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra para el panel */
+        z-index: 1000; /* Asegurar que esté encima de otros elementos */
+    }
+    /* Fondo oscuro detrás del panel */
+    #overlay {
+        display: none; /* Inicialmente oculto */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
+        z-index: 999; /* Debajo del panel */
+    }
+
+    /* BOTON ENVIAR TEST */
+    button[type="submit"] {
+    font-family: 'Times New Roman', Times, serif;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    margin: 0 100px;
+    border-radius: 10px;
+    height: 40px;
+    width: 100px;
+    background-color: #72a783;
+    border: 0px;
+    transition: box-shadow 0.s ease;
+    margin-top: 30px;
+    }
+
+    button[type="submit"]:hover,
+    button[type="submit"]:focus {
+     /* box-shadow: 0 0 10px rgba(189, 39, 39, 0.5); */
+    background-color:#0eaf44;
+    color: rgb(255, 255, 255);
+    }
+
+    /* BOTON ENVIAR CERRAR */
+    button[type="button"] {
+    font-family: 'Times New Roman', Times, serif;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    margin: 0 10px;
+    border-radius: 10px;
+    height: 40px;
+    width: 100px;
+    background-color: rgba(214, 88, 88, 0.938);
+    border: 0px;
+    transition: box-shadow 0.s ease;
+    margin-top: 30px;
+    }
+
+    button[type="button"]:hover,
+    button[type="button"]:focus {
+     /* box-shadow: 0 0 10px rgba(189, 39, 39, 0.5); */
+    background-color:#cc1111;
+    color: rgb(255, 255, 255);
+    }
+
+    button[class="panelreco"]{
+
+        margin-top: 10px; 
+        padding: 10px; 
+        font-size: 18px;
+        background-color: #0752b300;
+    }
+

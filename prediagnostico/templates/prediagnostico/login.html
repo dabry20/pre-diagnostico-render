@@ -1,0 +1,49 @@
+{% load static %}
+<link href="{% static 'prediagnostico/css/login.css' %}" rel="stylesheet">
+<body>
+  
+
+<h1>Pre-diagnóstico temp<span>rano del dengue</span></h1>
+<div class="container">
+      
+  <div class="panel panel-1">
+   
+  </div>
+  <div class="panel panel-2">
+      
+    <div class="formulario">
+      <h2>Inicio de Sesión</h2>
+      <form method="post">
+        {% csrf_token %}
+          <div class="username-use">
+              <input type="text" placeholder="Usuario" name="id_documento" id="id_documento" required>
+              
+          </div>
+          <div class="username-pass">
+              <input type="password" placeholder="Contraseña" name="id_contra" id="id_contra" required/>
+              
+          </div>
+          <a href=" {%url 'Recuperar'%}">¿Olvidaste tu contraseña?</a>
+          
+          <button type="submit">Iniciar</button>
+          <div >
+            
+            <a class="lintex" href="{% url 'Registro'%}">Registrate</a>
+        </div>
+        
+        {% if error %}
+        <p style="color: red;">{{ error }}</p>
+        {% endif %}
+      </form>
+  
+  </div>
+  </div>
+</div>
+</body>
+
+  <footer class="footer text-faded text-center ">
+  
+      <p class="m-0 mbt1">&copy; DENSYMP-2024  <span class="dav">B.M.A</span> </p>
+  
+</footer>
+

@@ -1,0 +1,308 @@
+
+  #mensaje-panel {
+      transition: background-color 0.6s; /* Suavizar la transición del color de fondo */
+      color: rgb(14, 7, 7); /* Color del texto */
+      font-size: 30px;
+      font-family: 'Times New Roman', Times, serif;
+  }
+
+  button[type="button"] {
+        background-color: transparent; /* Fondo transparente */
+        border: none; /* Sin borde */
+        color: white; /* Color del texto */
+        cursor: pointer; /* Cambiar cursor al pasar sobre el botón */
+        font-size: 16px; /* Tamaño de fuente */
+        padding: 10px; /* Espaciado */
+        transition: color 0.3s; /* Suavizar cambio de color */
+    }
+
+    button[type="button"]:hover {
+        color: #ccc; /* Color de texto al pasar el mouse */
+        border: 1px; 
+        border-color: #050505;
+    }
+
+
+h2{
+  text-align: center;
+  color: #062136;
+  font-weight: bold;
+  margin-top: 30px;border-bottom: 3px solid  rgba(11, 114, 211, 0.973);
+}
+h3{
+  text-align: center;
+  color: #091b29;
+  font-weight: bold;
+  margin-top: 30px;border-bottom: 3px solid  rgba(6, 19, 31, 0.973);
+}
+
+ .container {
+margin-top: 20px;
+margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  overflow:-moz-hidden-unscrollable;
+}
+
+.panel {
+  background-color: #d3323200;
+  padding: 3px;
+  margin: 0 80 0px;
+ 
+ 
+}
+
+.panel-1 {
+  background-image:  url('../img/enfer01.png' );
+  padding: 420px;
+  background-size: contain;
+  background-repeat: No-repeat;
+  background-position: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.panel-2 {
+  width: 800px;
+  height: 1100px;
+  
+  background-color: #ffffff67;
+  border-radius: 30px;
+  padding: 30px;
+  box-shadow: 0 8px 20px rgb(4, 25, 43);
+  overflow:-moz-hidden-unscrollable;
+}
+
+
+.form-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  
+   
+    }
+/* .form-group > div {
+    width: 100%;
+} */
+
+
+button[type="submit"] {
+  padding: 10px;
+  width: 50%;
+  height: 50px;
+  background-color: #4b91eca4;
+  color: #fff;
+  border-color: #101616;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 22px;
+  display: block;
+  margin: 0 auto;
+}
+
+button[type="submit"]:hover,
+button[type="submit"]:focus {
+  /* box-shadow: 0 0 10px rgba(189, 39, 39, 0.5); */
+  background-color:#0c4880;
+  color: rgb(255, 255, 255);
+}
+
+
+
+.save-icon {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm4-8c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4 4 1.79 4 4z' fill='%2357606F'/%3E%3C/svg%3E");
+    background-repeat: No-repeat;
+    background-size: contain;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+/* a{
+  font-size: 20px;
+  
+} */
+
+
+input[type="date"] {
+  padding: 5px;
+  width: 250px;
+  height: 30px;
+  background-color: #0b60a5;
+  color: #fff;
+  border-color: #101616;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 30px;
+  display: block;
+  margin: 0 450;
+  
+  
+}
+label[for="id_fsintomas"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  display:block;
+  white-space: Nowrap;
+  margin-right: 10px;
+  margin-left: 220px;
+}
+
+label[for="fcabe"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  display:block;
+  white-space: Nowrap;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  
+}
+.form-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+
+
+
+label[for="id_current_temp"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 313px;
+  margin-left: 50px;
+}
+
+
+label[for="id_servere_headche"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 290px;
+  margin-left: 50px;
+}
+
+
+label[for="id_pain_behind_the_eyes"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 256px;
+  margin-left: 50px;
+}
+label[for="id_joint_muscle_aches"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 330px;
+  margin-left: 50px;
+}
+label[for="id_metallic_taste_in_the_mouth"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 247px;
+  margin-left: 50px;
+}
+
+label[for="id_appetite_loss"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 348px;
+  margin-left: 50px;
+}
+
+label[for="id_addominal_pain"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 269px;
+  margin-left: 50px;
+}
+
+label[for="id_nausea_vomiting"]{ 
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 345px;
+  margin-left: 50px;
+}
+
+label[for="id_diarrhoea"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 492px;
+  margin-left: 50px;
+}
+
+label[for="id_otros"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 50px;
+ 
+
+}
+
+.checkbox-group {
+    display: flex;
+    gap: 16px;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .checkbox-label.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+  }
+  
+input[type="checkbox"]{
+margin-right: 45px;
+height: 20px;
+width: 20px;
+
+}
+
+.alert {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
