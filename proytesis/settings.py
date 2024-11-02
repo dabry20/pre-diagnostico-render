@@ -16,16 +16,17 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 import os
+import dj_database_url
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY' , default='asdfddfdsgdsagdsafds')
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'RENDER' not in os.environ
+DEBUG = os.environ.get("DEBUG","False").lower()=="true"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
 RENDER_EXTERNA_HOSTNAME= os.environ.get('RENDER_EXTERNA_HOSTNAME')
 if RENDER_EXTERNA_HOSTNAME:
@@ -88,7 +89,9 @@ DATABASES = {
         'DATEBASE_PORT': '5432',
     }
 }
-
+database_url= os.environ.get("DATABASE_URL")
+DATABASES['default']=dj_database_url.parse(database_url)
+#postgresql://dengueproy_bys4_user:qZ7Tz2O8C9mWrAHRpz9Yd3MSRaX0wrIM@dpg-csj44vu8ii6s73cv0ac0-a.oregon-postgres.render.com/dengueproy_bys4
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

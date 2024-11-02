@@ -13,7 +13,7 @@ from .models import Encuesta
 from .models import Historial
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import render, get_object_or_404
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
@@ -90,13 +90,18 @@ def login(request):
     return render(request, 'prediagnostico/login.html')
 #-------------------------------------------------------------------------
 
+
+
+
+
 def historial(request):
     docu = request.session.get('docu')
     form = EncuestaForm()
 
-    # Obtener las fechas desde el formulario GET
+    # Obtener las fechas y el resultado desde el formulario GET
     fecha_desde = request.GET.get('fecha_desde')
     fecha_hasta = request.GET.get('fecha_hasta')
+    resultado = request.GET.get('resultado')
 
     if request.method == 'POST':
         form = EncuestaForm(request.POST)
@@ -116,15 +121,15 @@ def historial(request):
                 # Guardar las respuestas en la base de datos
                 respuesta = Encuesta(
                     idpaciente=paciente,
-                    idhistorial=historial_instance,  # Asignar la instancia de Historial
+                    idhistorial=historial_instance,
                     pregunta1=form.cleaned_data['pregunta1'],
                     pregunta2=form.cleaned_data['pregunta2'],
                     pregunta3=form.cleaned_data['pregunta3']
                 )
-                respuesta.save()  # Guardar la respuesta
+                respuesta.save()
 
                 # Redirigir o mostrar un mensaje de éxito
-                return redirect('Historial')  # Cambia 'Historial' por la vista a la que deseas redirigir
+                return redirect('Historial')
 
     if docu:
         paciente = get_object_or_404(Paciente, documento=docu)
@@ -137,40 +142,76 @@ def historial(request):
                 fecha_hasta = datetime.strptime(fecha_hasta, '%Y-%m-%d')
                 historiales = historiales.filter(idexamen__created__range=[fecha_desde, fecha_hasta])
             except ValueError:
-                pass  # Si hay un error en el formato de fecha, no aplicamos el filtro
+                pass
+
+        # Aplicar filtro por resultado si está presente
+        if resultado:
+            historiales = historiales.filter(idexamen__Resultado=resultado)
 
         # Limitar a los últimos 15 resultados
-        datos_historial = [
-            {
+        datos_historial = []
+        total_dias = 0
+        count = 0
+
+        for historial in historiales.order_by('-idhistorial')[:15]:
+            FIS = historial.idexamen.fsintomas
+            FD = historial.idexamen.created
+
+            # Convertir a offset-naive
+            if isinstance(FIS, date):
+                FIS = datetime.combine(FIS, datetime.min.time())
+            if FD.tzinfo is not None:
+                FD = FD.replace(tzinfo=None)  # Hacer FD offset-naive
+
+            tiempo_deteccion = (FD - FIS).days
+
+            if tiempo_deteccion >= 0:  # Asegurarse de que la diferencia sea válida
+                total_dias += tiempo_deteccion
+                count += 1
+
+            # Se agrega el tiempo de detección al diccionario, pero tdd se calculará después
+            datos_historial.append({
                 'id': historial.idhistorial,
-                'fexamen': historial.idexamen.created.strftime('%d/%m/%Y'),
-                'resultado': historial.idexamen.resultado,
-                'fiebre': historial.idexamen.current_temp,
-                'dcabeza': historial.idexamen.servere_headche,
-                'dojos': historial.idexamen.pain_behind_the_eyes,
-                'dmuscular': historial.idexamen.joint_muscle_aches,
-                'sboca': historial.idexamen.metallic_taste_in_the_mouth,
-                'papetito': historial.idexamen.appetite_loss,
-                'dabdominal': historial.idexamen.addominal_pain,
-                'nauseas': historial.idexamen.nausea_vomiting,
-                'diarrea': historial.idexamen.diarrhoea,
+                'Fexamen': FD.strftime('%d/%m/%Y'),
+                'Resultado': historial.idexamen.Resultado,
+                'Fiebre': historial.idexamen.Fiebre,
+                'darticulaciones': historial.idexamen.Dolor_articulaciones,
+                'dojos': historial.idexamen.Dolor_detras_de_ojos,
+                'dmuscular': historial.idexamen.Dolor_muscular,
+                'dcabeza': historial.idexamen.Dolor_de_cabeza,
+                'Ecutanea': historial.idexamen.Erupcion_cutanea_sarpullido,
+                'nauseas': historial.idexamen.Nauseas_vomitos,
+                'dabdominal_intenso': historial.idexamen.Dolor_abdominal_intenso,
+                'vomitos_persistentes': historial.idexamen.Vomitos_persistentes,
+                'sangradomucosas': historial.idexamen.Sangrado_mucosas_y_encias,
+                'somnolencia': historial.idexamen.Somnolencia_irritabilidad,
+                'Decaimiento': historial.idexamen.Decaimiento,
                 'otros': historial.idexamen.otros,
-                
-                'test_realizado': Encuesta.objects.filter(idpaciente=paciente, idhistorial=historial).exists()  # Verificar si ya realizó el test
-            }
-            for historial in historiales.order_by('-idhistorial')[:15]  # Obtener solo los últimos 15 resultados
-        ]
+                'tiempo': tiempo_deteccion,  # Guardar el tiempo de detección correspondiente
+                'test_realizado': Encuesta.objects.filter(idpaciente=paciente, idhistorial=historial).exists()
+            })
+
+        num_dengue_grave = historiales.filter(idexamen__Resultado='3').count()
+        num_personas_detectadas = historiales.count()
+
+        # Calcular el Tiempo Promedio de Detección del Dengue (TDD)
+        tdd = total_dias / count if count > 0 else 0
     else:
         datos_historial = []
+        num_dengue_grave = 0
+        num_personas_detectadas = 0
+        tdd = 0
 
     return render(request, "prediagnostico/historial.html", {
         'datos_historial': datos_historial,
         'form': form,
         'fecha_desde': request.GET.get('fecha_desde', ''),
         'fecha_hasta': request.GET.get('fecha_hasta', ''),
+        'resultado': request.GET.get('resultado', ''),
+        'num_dengue_grave': num_dengue_grave,
+        'num_personas_detectadas': num_personas_detectadas,
+        'tdd': tdd,  # tdd ahora se calcula correctamente
     })
-
-
 # RECUPERAR CONTRASEÑA--> ENVIAR TOKEN AL CORREO
 def recuperar(request):
     if request.method == 'POST':
@@ -253,83 +294,100 @@ def registro(request):
 # ------------------------------------------------------------------------------------
 
 # ELECCION DE SINTOMAS
+import os
+import pandas as pd
+import joblib
+from django.shortcuts import render
+from django.contrib import messages
+from .forms import ExamenForm
+from .models import Paciente
+import time 
 def home(request):
     if request.method == 'POST':
         form = ExamenForm(request.POST)
 
         if form.is_valid():
-            # Obtener el documento del paciente desde la sesión
             documento = request.session.get('docu')
-            # print(f'Documento ingresado: {documento}') 
             try:
-                # Buscar el paciente usando el documento
                 paciente = Paciente.objects.get(documento=documento)
-
-                # Asignar automáticamente el id del paciente al campo idpaciente_id del formulario
                 form.instance.paciente = paciente
 
-                # Obtener los datos del formulario y transformarlos
+                # Recopilar datos del formulario
                 datos = {
-                    'current_temp': 1 if 'current_temp' in request.POST else 0,
-                    'servere_headche': 1 if 'servere_headche' in request.POST else 0,
-                    'pain_behind_the_eyes': 1 if 'pain_behind_the_eyes' in request.POST else 0,
-                    'joint_muscle_aches': 1 if 'joint_muscle_aches' in request.POST else 0,
-                    'metallic_taste_in_the_mouth': 1 if 'metallic_taste_in_the_mouth' in request.POST else 0,
-                    'appetite_loss': 1 if 'appetite_loss' in request.POST else 0,
-                    'addominal_pain': 1 if 'addominal_pain' in request.POST else 0,
-                    'nausea_vomiting': 1 if 'nausea_vomiting' in request.POST else 0,
-                    'diarrhoea': 1 if 'diarrhoea' in request.POST else 0,
+                    'Fiebre': 1 if 'Fiebre' in request.POST else 0,
+                    'Dolor_articulaciones': 1 if 'Dolor_articulaciones' in request.POST else 0,
+                    'Dolor_detras_de_ojos': 1 if 'Dolor_detras_de_ojos' in request.POST else 0,
+                    'Dolor_muscular': 1 if 'Dolor_muscular' in request.POST else 0,
+                    'Dolor_de_cabeza': 1 if 'Dolor_de_cabeza' in request.POST else 0,
+                    'Erupcion_cutanea_sarpullido': 1 if 'Erupcion_cutanea_sarpullido' in request.POST else 0,
+                    'Nauseas_vomitos': 1 if 'Nauseas_vomitos' in request.POST else 0,
+                    'Dolor_abdominal_intenso': 1 if 'Dolor_abdominal_intenso' in request.POST else 0,
+                    'Vomitos_persistentes': 1 if 'Vomitos_persistentes' in request.POST else 0,
+                    'Sangrado_mucosas_y_encias': 1 if 'Sangrado_mucosas_y_encias' in request.POST else 0,
+                    'Somnolencia_irritabilidad': 1 if 'Somnolencia_irritabilidad' in request.POST else 0,
+                    'Decaimiento': 1 if 'Decaimiento' in request.POST else 0,
                 }
 
-                # imprimir los datos obtenidos
-                print("Datos del formulario:", datos)
-
                 # Cargar el modelo
-                modelo_path = os.path.join('C:\\Users\\USER\\Desktop\\proydjango\\proytesis', 'RandomForest_modelo.pkl')
+                modelo_path = os.path.join('C:\\Users\\USER\\Desktop\\proydjango\\proytesis', 'modelo_bosque_aleatorio.pkl')
                 modelo = joblib.load(modelo_path)
 
-                # Preparar los datos para la predicción usando un DataFrame
+                # Crear un DataFrame para la predicción
                 X_nuevo = pd.DataFrame([[ 
-                    datos['current_temp'], 
-                    datos['servere_headche'], 
-                    datos['pain_behind_the_eyes'], 
-                    datos['joint_muscle_aches'], 
-                    datos['metallic_taste_in_the_mouth'], 
-                    datos['appetite_loss'], 
-                    datos['addominal_pain'], 
-                    datos['nausea_vomiting'], 
-                    datos['diarrhoea']
+                    datos['Fiebre'], 
+                    datos['Dolor_articulaciones'], 
+                    datos['Dolor_detras_de_ojos'], 
+                    datos['Dolor_muscular'], 
+                    datos['Dolor_de_cabeza'], 
+                    datos['Erupcion_cutanea_sarpullido'], 
+                    datos['Nauseas_vomitos'], 
+                    datos['Dolor_abdominal_intenso'], 
+                    datos['Vomitos_persistentes'], 
+                    datos['Sangrado_mucosas_y_encias'], 
+                    datos['Somnolencia_irritabilidad'], 
+                    datos['Decaimiento']
                 ]], columns=[
-                    'current_temp',
-                    'dengue.servere_headche',
-                    'dengue.pain_behind_the_eyes',
-                    'dengue.joint_muscle_aches',
-                    'dengue.metallic_taste_in_the_mouth',
-                    'dengue.appetite_loss',
-                    'dengue.addominal_pain',
-                    'dengue.nausea_vomiting',
-                    'dengue.diarrhoea'
+                    'Fiebre',
+                    'Dolor_articulaciones',
+                    'Dolor_detras_de_ojos',
+                    'Dolor_muscular',
+                    'Dolor_de_cabeza',
+                    'Erupcion_cutanea_sarpullido',
+                    'Nauseas_vomitos',
+                    'Dolor_abdominal_intenso',
+                    'Vomitos_persistentes',
+                    'Sangrado_mucosas_y_encias',
+                    'Somnolencia_irritabilidad',
+                    'Decaimiento'
                 ])
-                print("Datos para la predicción:", X_nuevo)
 
-                # Hacer la predicción
-                resultado = modelo.predict(X_nuevo)
+                # Iniciar el conteo del tiempo
+                tiempo_inicio = time.time()
 
-                # Mensaje con el resultado de la predicción
-                resultado_prediccion = resultado[0] == 1  # 1 indica positivo
-                if resultado_prediccion:
-                    mensaje = "Usted posiblemente esta infectado de dengue."
-                else:
-                    mensaje = "Usted posiblemente No esta infectado de dengue."
+                # Realizar la predicción
+                Resultado = modelo.predict(X_nuevo)
 
-                # Guardar los datos en la base de datos
-                examen = form.save(commit=False)  # No guardar aún
+                # Finalizar el conteo del tiempo
+                tiempo_fin = time.time()
+                duracion_en_segundos = tiempo_fin - tiempo_inicio  # Calcular la duración
+
+                # Modificar el mensaje según el resultado
+                if Resultado[0] == 1:
+                    mensaje = "Usted posiblemente No presenta dengue."
+                elif Resultado[0] == 2:
+                    mensaje = "Usted posiblemente presenta dengue."
+                elif Resultado[0] == 3:
+                    mensaje = "Usted posiblemente presenta dengue grave."
+
+                # Guardar el examen con el resultado y la duración
+                examen = form.save(commit=False)
                 examen.pkpaciente = paciente 
-                examen.resultado = resultado_prediccion  # Guardar el resultado de la predicción
-                examen.save()  # Ahora guardar el examen con la predicción
+                examen.Resultado = Resultado[0]  # Guardar el resultado de la predicción
+                examen.Tiempo_deteccion = duracion_en_segundos  #almacena el tiempo de detección 
+                examen.save()
+
                 messages.success(request, '¡Registro exitoso! El examen ha sido guardado correctamente.')
-                form = ExamenForm()
-                # Redirigir a la URL deseada
+                form = ExamenForm()  # Reiniciar el formulario
                 return render(request, 'prediagnostico/home.html', {'form': form, 'mensaje': mensaje})
 
             except Paciente.DoesNotExist:
@@ -339,5 +397,4 @@ def home(request):
         form = ExamenForm()
 
     return render(request, 'prediagnostico/home.html', {'form': form})
-
 # -------------------------------------------------------------------------------------------------

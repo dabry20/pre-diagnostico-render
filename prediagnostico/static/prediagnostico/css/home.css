@@ -65,7 +65,7 @@ margin-bottom: 20px;
 
 .panel-2 {
   width: 800px;
-  height: 1100px;
+  height: 1280px;
   
   background-color: #ffffff67;
   border-radius: 30px;
@@ -177,63 +177,55 @@ label[for="fcabe"]{
 
 
 
-label[for="id_current_temp"]{
+label[for="id_Fiebre"]{
   font-size: 30px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   white-space: Nowrap;
-  margin-right: 313px;
+  margin-right: 314px;
   margin-left: 50px;
 }
 
 
-label[for="id_servere_headche"]{
+label[for="id_Dolor_articulaciones"]{
   font-size: 30px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   white-space: Nowrap;
-  margin-right: 290px;
+  margin-right: 285px;
   margin-left: 50px;
 }
 
 
-label[for="id_pain_behind_the_eyes"]{
+label[for="id_Dolor_detras_de_ojos"]{
   font-size: 30px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   white-space: Nowrap;
   margin-right: 256px;
   margin-left: 50px;
 }
-label[for="id_joint_muscle_aches"]{
+label[for="id_Dolor_muscular"]{
   font-size: 30px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   white-space: Nowrap;
   margin-right: 330px;
   margin-left: 50px;
 }
-label[for="id_metallic_taste_in_the_mouth"]{
+label[for="id_Dolor_de_cabeza"]{
   font-size: 30px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   white-space: Nowrap;
-  margin-right: 247px;
+  margin-right: 380px;
   margin-left: 50px;
 }
 
-label[for="id_appetite_loss"]{
+label[for="id_Erupcion_cutanea_sarpullido"]{
   font-size: 30px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   white-space: Nowrap;
-  margin-right: 348px;
+  margin-right: 199px;
   margin-left: 50px;
 }
 
-label[for="id_addominal_pain"]{
-  font-size: 30px;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  white-space: Nowrap;
-  margin-right: 269px;
-  margin-left: 50px;
-}
-
-label[for="id_nausea_vomiting"]{ 
+label[for="id_Nauseas_vomitos"]{
   font-size: 30px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   white-space: Nowrap;
@@ -241,11 +233,43 @@ label[for="id_nausea_vomiting"]{
   margin-left: 50px;
 }
 
-label[for="id_diarrhoea"]{
+label[for="id_Dolor_abdominal_intenso"]{ 
   font-size: 30px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   white-space: Nowrap;
-  margin-right: 492px;
+  margin-right: 268px;
+  margin-left: 50px;
+}
+
+label[for="id_Vomitos_persistentes"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 313px;
+  margin-left: 50px;
+}
+
+label[for="id_Sangrado_mucosas_y_encias"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 183px;
+  margin-left: 50px;
+}
+
+label[for="id_Somnolencia_irritabilidad"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 268px;
+  margin-left: 50px;
+}
+
+label[for="id_Decaimiento"]{
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  white-space: Nowrap;
+  margin-right: 423px;
   margin-left: 50px;
 }
 

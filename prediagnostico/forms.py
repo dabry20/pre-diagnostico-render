@@ -34,48 +34,61 @@ class ExamenForm(forms.ModelForm):
         widget=forms.DateInput(attrs={'type': 'date'}),
         label='Fecha inicial de los síntomas:'  # Label personalizado
     )
-    current_temp = forms.BooleanField(
+    Fiebre = forms.BooleanField(
         required=False,  # Asegúrate de que el campo no sea obligatorio
         label='Fiebre alta repentina'  # Label personalizado
     )
-    servere_headche = forms.BooleanField(
+    Dolor_articulaciones = forms.BooleanField(
         required=False,  # Asegúrate de que el campo no sea obligatorio
-        label='Fuerte dolor de cabeza'  # Label personalizado
+        label='Dolor de articulaciones'  # Label personalizado
     )
-    pain_behind_the_eyes = forms.BooleanField(
+    Dolor_detras_de_ojos = forms.BooleanField(
         required=False,  # Asegúrate de que el campo no sea obligatorio
         label='Dolor y cansancio de ojos'  # Label personalizado
     )
-    joint_muscle_aches = forms.BooleanField(
+    Dolor_muscular = forms.BooleanField(
         required=False,  # Asegúrate de que el campo no sea obligatorio
         label='Dolores musculares'  # Label personalizado
     )
-    metallic_taste_in_the_mouth = forms.BooleanField(
+    Dolor_de_cabeza = forms.BooleanField(
         required=False,  # Asegúrate de que el campo no sea obligatorio
-        label='Sabor metálico en la boca'  # Label personalizado
+        label='Dolor de cabeza'  # Label personalizado
     )
-    appetite_loss= forms.BooleanField(
+    Erupcion_cutanea_sarpullido= forms.BooleanField(
         required=False,  # Asegúrate de que el campo no sea obligatorio
-        label='Perdida de apetito'  # Label personalizado
+        label='Erupcion cutanea o sarpullido'  # Label personalizado
     )
 
-    addominal_pain = forms.BooleanField(
+    Nauseas_vomitos = forms.BooleanField(
+        required=False,  # Asegúrate de que el campo no sea obligatorio
+        label='Nuaseas y vómitos'  # Label personalizado
+    )
+    Dolor_abdominal_intenso = forms.BooleanField(
         required=False,  # Asegúrate de que el campo no sea obligatorio
         label='Dolor abdominal intenso'  # Label personalizado
     )
-    nausea_vomiting = forms.BooleanField(
+    Vomitos_persistentes = forms.BooleanField(
         required=False,  # Asegúrate de que el campo no sea obligatorio
-        label='Nauseas y vómitos'  # Label personalizado
+        label='Vomitos persistentes'  # Label personalizado
     )
-    diarrhoea = forms.BooleanField(
+    Sangrado_mucosas_y_encias = forms.BooleanField(
         required=False,  # Asegúrate de que el campo no sea obligatorio
-        label='Diarrea'  # Label personalizado
+        label='Sangrado de mucosas o encias'  # Label personalizado
+    )
+    Somnolencia_irritabilidad = forms.BooleanField(
+        required=False,  # Asegúrate de que el campo no sea obligatorio
+        label='Somnolencia o irritación'  # Label personalizado
+    )
+    Decaimiento = forms.BooleanField(
+        required=False,  # Asegúrate de que el campo no sea obligatorio
+        label='Decaimiento'  # Label personalizado
     )
 
     class Meta:
         model = Examen
-        fields = ['fsintomas', 'current_temp', 'servere_headche', 'pain_behind_the_eyes', 'joint_muscle_aches',
-                    'metallic_taste_in_the_mouth', 'appetite_loss', 'addominal_pain','nausea_vomiting', 'diarrhoea','otros']
+        fields = ['fsintomas', 'Fiebre', 'Dolor_articulaciones', 'Dolor_detras_de_ojos', 'Dolor_muscular',
+                    'Dolor_de_cabeza', 'Erupcion_cutanea_sarpullido', 'Nauseas_vomitos','Dolor_abdominal_intenso',
+                    'Vomitos_persistentes', 'Sangrado_mucosas_y_encias', 'Somnolencia_irritabilidad','Decaimiento','otros']
         widgets = {
             # 'idpaciente': forms.HiddenInput(), ocula los campos 
             'fsintomas': forms.DateInput(attrs={'type': 'date'}),
