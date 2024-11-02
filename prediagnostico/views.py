@@ -339,4 +339,5 @@ def home(request):
         form = ExamenForm()
 
     return render(request, 'prediagnostico/home.html', {'form': form})
+
 # -------------------------------------------------------------------------------------------------
