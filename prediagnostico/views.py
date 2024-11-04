@@ -90,10 +90,6 @@ def login(request):
     return render(request, 'prediagnostico/login.html')
 #-------------------------------------------------------------------------
 
-
-
-
-
 def historial(request):
     docu = request.session.get('docu')
     form = EncuestaForm()
@@ -302,6 +298,7 @@ from django.contrib import messages
 from .forms import ExamenForm
 from .models import Paciente
 import time 
+
 def home(request):
     if request.method == 'POST':
         form = ExamenForm(request.POST)
@@ -329,8 +326,14 @@ def home(request):
                 }
 
                 # Cargar el modelo
-                modelo_path = os.path.join('C:\\Users\\USER\\Desktop\\proydjango\\proytesis', 'modelo_bosque_aleatorio.pkl')
-                modelo = joblib.load(modelo_path)
+                current_dir = os.path.dirname(__file__)
+                modelo_path = os.path.join(current_dir, 'models', 'modelo_bosque_aleatorio.pkl')
+
+                try:
+                    modelo = joblib.load(modelo_path)
+                except FileNotFoundError:
+                    messages.error(request, 'Modelo no encontrado. Asegúrate de que el archivo exista.')
+                    return render(request, 'prediagnostico/home.html', {'form': form})
 
                 # Crear un DataFrame para la predicción
                 X_nuevo = pd.DataFrame([[ 
@@ -373,17 +376,19 @@ def home(request):
 
                 # Modificar el mensaje según el resultado
                 if Resultado[0] == 1:
-                    mensaje = "Usted posiblemente No presenta dengue."
+                    mensaje = "Usted posiblemente no presenta dengue."
                 elif Resultado[0] == 2:
                     mensaje = "Usted posiblemente presenta dengue."
                 elif Resultado[0] == 3:
                     mensaje = "Usted posiblemente presenta dengue grave."
+                else:
+                    mensaje = "Resultado desconocido."
 
                 # Guardar el examen con el resultado y la duración
                 examen = form.save(commit=False)
                 examen.pkpaciente = paciente 
                 examen.Resultado = Resultado[0]  # Guardar el resultado de la predicción
-                examen.Tiempo_deteccion = duracion_en_segundos  #almacena el tiempo de detección 
+                examen.Tiempo_deteccion = duracion_en_segundos  # Almacena el tiempo de detección 
                 examen.save()
 
                 messages.success(request, '¡Registro exitoso! El examen ha sido guardado correctamente.')
@@ -397,4 +402,5 @@ def home(request):
         form = ExamenForm()
 
     return render(request, 'prediagnostico/home.html', {'form': form})
+
 # -------------------------------------------------------------------------------------------------
