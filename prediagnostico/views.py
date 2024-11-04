@@ -18,7 +18,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
 import uuid
-
+from django.shortcuts import render
 # CREACION DE LAS VISTAS
 # def login(request):
 #     return render(request,"prediagnostico/login.html")
