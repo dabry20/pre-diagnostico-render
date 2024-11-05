@@ -64,6 +64,7 @@ def Editar_paciente(request):
     return redirect('Vista')  # Redirige si no es un POST
 
 
+
 # LOGIN DE LA WEB---------------------------------------------------------
 def login(request):
     if request.method == 'POST':
@@ -89,6 +90,7 @@ def login(request):
 
     return render(request, 'prediagnostico/login.html')
 #-------------------------------------------------------------------------
+
 
 def historial(request):
     docu = request.session.get('docu')
@@ -208,6 +210,8 @@ def historial(request):
         'num_personas_detectadas': num_personas_detectadas,
         'tdd': tdd,  # tdd ahora se calcula correctamente
     })
+
+
 # RECUPERAR CONTRASEÑA--> ENVIAR TOKEN AL CORREO
 def recuperar(request):
     if request.method == 'POST':

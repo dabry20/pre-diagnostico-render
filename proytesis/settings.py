@@ -91,6 +91,7 @@ DATABASES = {
 }
 database_url= os.environ.get("DATABASE_URL")
 DATABASES['default']=dj_database_url.parse(database_url)
+
 #postgresql://dengueproy_bys4_user:qZ7Tz2O8C9mWrAHRpz9Yd3MSRaX0wrIM@dpg-csj44vu8ii6s73cv0ac0-a.oregon-postgres.render.com/dengueproy_bys4
 
 # Password validation
