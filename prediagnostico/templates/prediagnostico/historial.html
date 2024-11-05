@@ -7,26 +7,32 @@
 
 <body>
 
-<div id="overlay" onclick="cerrarPanel()" style="display: none;"></div>
-<div id="form-panel" style="display: none;">
-    <h3>Responde las siguientes interrogantes</h3>
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="historial_id" id="historial_id">  <!-- Campo oculto para el ID del historial -->
-        
-        <label for="p1" style="font-weight: bold; font-size: 20px; font-family: 'Times New Roman', Times, serif;">¿Fuiste a realizarte un examen médico?</label><br>
-        {{ form.pregunta1.label }} {{ form.pregunta1 }}<br>
-        
-        <label for="p2" style="font-weight: bold; font-size: 20px; font-family: 'Times New Roman', Times, serif;">¿Nuestro pre-diagnóstico fue acertado?</label><br>
-        {{ form.pregunta2.label }} {{ form.pregunta2 }}<br>
-        
-        <label for="p3" style="font-weight: bold; font-size: 20px; font-family: 'Times New Roman', Times, serif;">De no ser acertado el pre-diagnóstico, ¿Cuál fue la enfermedad que tuviste?</label><br>
-        {{ form.pregunta3.label }} {{ form.pregunta3 }}
-        
-        <button type="submit">Enviar</button>
-        <button type="button" onclick="cerrarPanel()">Cerrar</button>
-    </form>
-</div>
+    <div id="overlay" onclick="cerrarPanel()" style="display: none;"></div>
+    <div id="form-panel" style="display: none;">
+        <h3>Responde las siguientes interrogantes</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="historial_id" id="historial_id">  <!-- Campo oculto para el ID del historial -->
+            
+            <label for="id_pregunta1" style="font-weight: bold; font-size: 20px; font-family: 'Times New Roman', Times, serif;">
+                ¿Fuiste a realizarte un examen médico?
+            </label><br>
+            {{ form.pregunta1.label_tag }} {{ form.pregunta1 }}<br>
+            
+            <label for="id_pregunta2" style="font-weight: bold; font-size: 20px; font-family: 'Times New Roman', Times, serif;">
+                ¿Nuestro pre-diagnóstico fue acertado?
+            </label><br>
+            {{ form.pregunta2.label_tag }} {{ form.pregunta2 }}<br>
+            
+            <label for="id_pregunta3" style="font-weight: bold; font-size: 20px; font-family: 'Times New Roman', Times, serif;">
+                De no ser acertado el pre-diagnóstico, ¿Cuál fue la enfermedad que tuviste?
+            </label><br>
+            {{ form.pregunta3.label_tag }} {{ form.pregunta3 }}
+            
+            <button type="submit">Enviar</button>
+            <button type="button" onclick="cerrarPanel()">Cerrar</button>
+        </form>
+    </div>
 
 <!-- Panel de notificación -->
 <div id="notification-panel" style="display: none; position: fixed; top: 20%; left: 50%; transform: translateX(-50%); padding: 20px; border-radius: 5px; z-index: 1000; color: white; font-size: 24px;">
