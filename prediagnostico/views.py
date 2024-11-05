@@ -91,9 +91,12 @@ def login(request):
     return render(request, 'prediagnostico/login.html')
 #-------------------------------------------------------------------------
 
+from django.shortcuts import render, redirect, get_object_or_404
+from datetime import datetime
+from .forms import EncuestaForm
+from .models import Encuesta, Historial, Paciente
 
 def historial(request):
-    docu = request.session.get('docu')
     form = EncuestaForm()
 
     # Obtener las fechas y el resultado desde el formulario GET
@@ -106,99 +109,85 @@ def historial(request):
         historial_id = request.POST.get('historial_id')  # Obtener el ID del historial del formulario
 
         if form.is_valid():
-            # Obtener el paciente correspondiente al documento
-            paciente = get_object_or_404(Paciente, documento=docu)
+            # Aquí ya no necesitamos el paciente específico
+            # Guardar las respuestas en la base de datos
+            historial_instance = get_object_or_404(Historial, idhistorial=historial_id)
 
-            # Verificar si ya existe una encuesta para este historial
-            if Encuesta.objects.filter(idpaciente=paciente, idhistorial=historial_id).exists():
-                form.add_error(None, "Ya has realizado este test")
-            else:
-                # Obtener la instancia de Historial correspondiente al ID
-                historial_instance = get_object_or_404(Historial, idhistorial=historial_id)
+            respuesta = Encuesta(
+                idhistorial=historial_instance,
+                pregunta1=form.cleaned_data['pregunta1'],
+                pregunta2=form.cleaned_data['pregunta2'],
+                pregunta3=form.cleaned_data['pregunta3']
+            )
+            respuesta.save()
 
-                # Guardar las respuestas en la base de datos
-                respuesta = Encuesta(
-                    idpaciente=paciente,
-                    idhistorial=historial_instance,
-                    pregunta1=form.cleaned_data['pregunta1'],
-                    pregunta2=form.cleaned_data['pregunta2'],
-                    pregunta3=form.cleaned_data['pregunta3']
-                )
-                respuesta.save()
+            # Redirigir o mostrar un mensaje de éxito
+            return redirect('Historial')
 
-                # Redirigir o mostrar un mensaje de éxito
-                return redirect('Historial')
+    # Obtener todos los historiales
+    historiales = Historial.objects.select_related('idexamen')
 
-    if docu:
-        paciente = get_object_or_404(Paciente, documento=docu)
-        historiales = Historial.objects.filter(idpaciente=paciente).select_related('idexamen')
+    # Aplicar filtros de fecha si están presentes
+    if fecha_desde and fecha_hasta:
+        try:
+            fecha_desde = datetime.strptime(fecha_desde, '%Y-%m-%d')
+            fecha_hasta = datetime.strptime(fecha_hasta, '%Y-%m-%d')
+            historiales = historiales.filter(idexamen__created__range=[fecha_desde, fecha_hasta])
+        except ValueError:
+            pass
 
-        # Aplicar filtros de fecha si están presentes
-        if fecha_desde and fecha_hasta:
-            try:
-                fecha_desde = datetime.strptime(fecha_desde, '%Y-%m-%d')
-                fecha_hasta = datetime.strptime(fecha_hasta, '%Y-%m-%d')
-                historiales = historiales.filter(idexamen__created__range=[fecha_desde, fecha_hasta])
-            except ValueError:
-                pass
+    # Aplicar filtro por resultado si está presente
+    if resultado:
+        historiales = historiales.filter(idexamen__Resultado=resultado)
 
-        # Aplicar filtro por resultado si está presente
-        if resultado:
-            historiales = historiales.filter(idexamen__Resultado=resultado)
+    # Limitar a los últimos 15 resultados
+    datos_historial = []
+    total_dias = 0
+    count = 0
 
-        # Limitar a los últimos 15 resultados
-        datos_historial = []
-        total_dias = 0
-        count = 0
+    for historial in historiales.order_by('-idhistorial')[:15]:
+        FIS = historial.idexamen.fsintomas
+        FD = historial.idexamen.created
 
-        for historial in historiales.order_by('-idhistorial')[:15]:
-            FIS = historial.idexamen.fsintomas
-            FD = historial.idexamen.created
+        # Convertir a offset-naive
+        if isinstance(FIS, date):
+            FIS = datetime.combine(FIS, datetime.min.time())
+        if FD.tzinfo is not None:
+            FD = FD.replace(tzinfo=None)  # Hacer FD offset-naive
 
-            # Convertir a offset-naive
-            if isinstance(FIS, date):
-                FIS = datetime.combine(FIS, datetime.min.time())
-            if FD.tzinfo is not None:
-                FD = FD.replace(tzinfo=None)  # Hacer FD offset-naive
+        tiempo_deteccion = (FD - FIS).days
 
-            tiempo_deteccion = (FD - FIS).days
+        if tiempo_deteccion >= 0:  # Asegurarse de que la diferencia sea válida
+            total_dias += tiempo_deteccion
+            count += 1
 
-            if tiempo_deteccion >= 0:  # Asegurarse de que la diferencia sea válida
-                total_dias += tiempo_deteccion
-                count += 1
+        # Se agrega el tiempo de detección al diccionario, pero tdd se calculará después
+        datos_historial.append({
+            'id': historial.idhistorial,
+            'Fexamen': FD.strftime('%d/%m/%Y'),
+            'Resultado': historial.idexamen.Resultado,
+            'Fiebre': historial.idexamen.Fiebre,
+            'darticulaciones': historial.idexamen.Dolor_articulaciones,
+            'dojos': historial.idexamen.Dolor_detras_de_ojos,
+            'dmuscular': historial.idexamen.Dolor_muscular,
+            'dcabeza': historial.idexamen.Dolor_de_cabeza,
+            'Ecutanea': historial.idexamen.Erupcion_cutanea_sarpullido,
+            'nauseas': historial.idexamen.Nauseas_vomitos,
+            'dabdominal_intenso': historial.idexamen.Dolor_abdominal_intenso,
+            'vomitos_persistentes': historial.idexamen.Vomitos_persistentes,
+            'sangradomucosas': historial.idexamen.Sangrado_mucosas_y_encias,
+            'somnolencia': historial.idexamen.Somnolencia_irritabilidad,
+            'Decaimiento': historial.idexamen.Decaimiento,
+            'otros': historial.idexamen.otros,
+            'tiempo': tiempo_deteccion,  # Guardar el tiempo de detección correspondiente
+            'test_realizado': Encuesta.objects.filter(idhistorial=historial).exists()
+        })
 
-            # Se agrega el tiempo de detección al diccionario, pero tdd se calculará después
-            datos_historial.append({
-                'id': historial.idhistorial,
-                'Fexamen': FD.strftime('%d/%m/%Y'),
-                'Resultado': historial.idexamen.Resultado,
-                'Fiebre': historial.idexamen.Fiebre,
-                'darticulaciones': historial.idexamen.Dolor_articulaciones,
-                'dojos': historial.idexamen.Dolor_detras_de_ojos,
-                'dmuscular': historial.idexamen.Dolor_muscular,
-                'dcabeza': historial.idexamen.Dolor_de_cabeza,
-                'Ecutanea': historial.idexamen.Erupcion_cutanea_sarpullido,
-                'nauseas': historial.idexamen.Nauseas_vomitos,
-                'dabdominal_intenso': historial.idexamen.Dolor_abdominal_intenso,
-                'vomitos_persistentes': historial.idexamen.Vomitos_persistentes,
-                'sangradomucosas': historial.idexamen.Sangrado_mucosas_y_encias,
-                'somnolencia': historial.idexamen.Somnolencia_irritabilidad,
-                'Decaimiento': historial.idexamen.Decaimiento,
-                'otros': historial.idexamen.otros,
-                'tiempo': tiempo_deteccion,  # Guardar el tiempo de detección correspondiente
-                'test_realizado': Encuesta.objects.filter(idpaciente=paciente, idhistorial=historial).exists()
-            })
+    num_dengue_grave = historiales.filter(idexamen__Resultado='3').count()
+    num_personas_detectadas = historiales.count()
 
-        num_dengue_grave = historiales.filter(idexamen__Resultado='3').count()
-        num_personas_detectadas = historiales.count()
-
-        # Calcular el Tiempo Promedio de Detección del Dengue (TDD)
-        tdd = total_dias / count if count > 0 else 0
-    else:
-        datos_historial = []
-        num_dengue_grave = 0
-        num_personas_detectadas = 0
-        tdd = 0
+    # Calcular el Tiempo Promedio de Detección del Dengue (TDD)
+    tdd = total_dias / count if count > 0 else 0
 
     return render(request, "prediagnostico/historial.html", {
         'datos_historial': datos_historial,
@@ -210,7 +199,6 @@ def historial(request):
         'num_personas_detectadas': num_personas_detectadas,
         'tdd': tdd,  # tdd ahora se calcula correctamente
     })
-
 
 # RECUPERAR CONTRASEÑA--> ENVIAR TOKEN AL CORREO
 def recuperar(request):
