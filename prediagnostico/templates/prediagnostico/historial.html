@@ -94,7 +94,7 @@
             {% for dato in datos_historial %}
             <tr data-id="{{ dato.id }}">
                 <td>{{ dato.Fexamen }}</td>
-                <td>{% if dato.Fiebre %}Sí{% else %}No{% endif %}</td>
+                <td>{{dato.Fiebre }}</td>
                 <td>{% if dato.darticulaciones %}Sí{% else %}No{% endif %}</td>
                 <td>{% if dato.dojos %}Sí{% else %}No{% endif %}</td>
                 <td>{% if dato.dmuscular %}Sí{% else %}No{% endif %}</td>
