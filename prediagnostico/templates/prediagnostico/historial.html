@@ -3,50 +3,326 @@
 {% load static %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historial de Exámenes</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
+<link href="{% static 'prediagnostico/css/historial.css' %}" rel="stylesheet">
+
 <body>
-    <h1>Historial de Exámenes</h1>
+
+<div id="overlay" onclick="cerrarPanel()" style="display: none;"></div>
+<div id="form-panel" style="display: none;">
+    <h3>Responde las siguientes interrogantes</h3>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="historial_id" id="historial_id">  <!-- Campo oculto para el ID del historial -->
+        
+        <label for="p1" style="font-weight: bold; font-size: 20px; font-family: 'Times New Roman', Times, serif;">¿Fuiste a realizarte un examen médico?</label><br>
+        {{ form.pregunta1.label }} {{ form.pregunta1 }}<br>
+        
+        <label for="p2" style="font-weight: bold; font-size: 20px; font-family: 'Times New Roman', Times, serif;">¿Nuestro pre-diagnóstico fue acertado?</label><br>
+        {{ form.pregunta2.label }} {{ form.pregunta2 }}<br>
+        
+        <label for="p3" style="font-weight: bold; font-size: 20px; font-family: 'Times New Roman', Times, serif;">De no ser acertado el pre-diagnóstico, ¿Cuál fue la enfermedad que tuviste?</label><br>
+        {{ form.pregunta3.label }} {{ form.pregunta3 }}
+        
+        <button type="submit">Enviar</button>
+        <button type="button" onclick="cerrarPanel()">Cerrar</button>
+    </form>
+</div>
+
+<!-- Panel de notificación -->
+<div id="notification-panel" style="display: none; position: fixed; top: 20%; left: 50%; transform: translateX(-50%); padding: 20px; border-radius: 5px; z-index: 1000; color: white; font-size: 24px;">
+</div>
+
+<!-- Filtros para la tabla -->
+<h2>Registro de exámenes realizados</h2>
+<form method="get" action="{% url 'Historial' %}">
+    <div style="margin-left: 80px; display: flex; gap: 60px; align-items: center; font-size: 25px; font-weight: bold; color: #0c2647;">
+        <div>
+            <label for="fecha-desde">Fecha desde:</label>
+            <input style="background-color: #ffffff98;" type="date" name="fecha_desde" id="fecha-desde" value="{{ fecha_desde }}">
+        </div>
+        <div>
+            <label for="fecha-hasta">Fecha hasta:</label>
+            <input style="background-color: #ffffff98;" type="date" name="fecha_hasta" id="fecha-hasta" value="{{ fecha_hasta }}">
+        </div>
+        <div>
+            <label for="resultado">Resultado:</label>
+            <select name="resultado" id="resultado" style="background-color: #ffffff98;">
+                <option value="" {% if resultado == "" %}selected{% endif %}>Todos</option>
+                <option value="1" {% if resultado == "1" %}selected{% endif %}>Negativo</option>
+                <option value="2" {% if resultado == "2" %}selected{% endif %}>Positivo</option>
+                <option value="3" {% if resultado == "3" %}selected{% endif %}>Dengue Grave</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit" style="margin-top: 0;">Filtrar</button>
+        </div>
+    </div>
+</form>
+
+<!-- Contenedor para la tabla con barra de desplazamiento -->
+<div style="overflow-x: auto; max-width: 100%; margin: 20px 0;">
     <table>
         <thead>
             <tr>
-                <th>ID Historial</th>
-                <th>ID Paciente</th>
-                <th>ID Examen</th>
+                <th>Fecha del examen</th>
+                <th>Fiebre alta repentina</th>
+                <th>Dolor de articulaciones</th>
+                <th>Dolor y cansancio de ojos</th>
+                <th>Dolores musculares</th>
+                <th>Dolor de cabeza</th>
+                <th>Erupción cutanea o sarpullido</th>
+                <th>Nauseas y vómitos</th>
+                <th>Dolor abdominal intenso</th>
+                <th>Vomitos persistentes</th>
+                <th>Sangrado de mucosas y encias</th>
+                <th>Somnolencia o irritabilidad</th>
+                <th>Decaimiento</th>
+                <th>Otros síntomas</th>
+                <th>Resultado</th>
+                <th>Tiempo de detección(Días)</th>
+                <th>Test de verificación</th>
+                <th>Ver</th>
             </tr>
         </thead>
         <tbody>
-            {% for registro in registros %}
+            {% for dato in datos_historial %}
+            <tr data-id="{{ dato.id }}">
+                <td>{{ dato.Fexamen }}</td>
+                <td>{% if dato.Fiebre %}Sí{% else %}No{% endif %}</td>
+                <td>{% if dato.darticulaciones %}Sí{% else %}No{% endif %}</td>
+                <td>{% if dato.dojos %}Sí{% else %}No{% endif %}</td>
+                <td>{% if dato.dmuscular %}Sí{% else %}No{% endif %}</td>
+                <td>{% if dato.dcabeza %}Sí{% else %}No{% endif %}</td>
+                <td>{% if dato.Ecutanea %}Sí{% else %}No{% endif %}</td>
+                <td>{% if dato.nauseas %}Sí{% else %}No{% endif %}</td>
+                <td>{% if dato.dabdominal_intenso %}Sí{% else %}No{% endif %}</td>
+                <td>{% if dato.vomitos_persistentes %}Sí{% else %}No{% endif %}</td>
+                <td>{% if dato.sangradomucosas %}Sí{% else %}No{% endif %}</td>
+                <td>{% if dato.somnolencia %}Sí{% else %}No{% endif %}</td>
+                <td>{% if dato.Decaimiento %}Sí{% else %}No{% endif %}</td>
+                <td>{{ dato.otros|default:"No presenta" }}</td>
+
+                <td>
+                    {% if dato.Resultado == '1' %}
+                        Negativo
+                    {% elif dato.Resultado == '2' %}
+                        Positivo
+                    {% elif dato.Resultado == '3' %}
+                        Dengue Grave
+                    {% else %}
+                        Desconocido
+                    {% endif %}
+                </td>
+                <td>{{dato.tiempo}}</td>
+                <td>
+                    {% if dato.test_realizado %}
+                        <button disabled style="font-weight: bold; color: white; background-color: #0ca83e;">Test realizado</button>
+                    {% else %}
+                        <button href="javascript:void(0);" onclick="mostrarFormulario('{{ dato.id }}')" style="color: #ffffff; font-size: 22px; font-weight: bold; background-color: #ce7676;">Realizar test</button>
+                    {% endif %}
+                </td>
+                <td>
+                    <button onclick="verDetalles('{{ dato.id }}')" style="color: #ffffff; font-size: 22px; font-weight: bold; background-color: #007bff;">Ver</button>
+                </td>
+            </tr>
+            {% empty %}
             <tr>
-                <td>{{ registro.idhistorial }}</td>
-                <td>{{ registro.idpaciente.id }}</td>
-                <td>{{ registro.idexamen.id }}</td>
+                <td colspan="15">No hay historial disponible.</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-</body>
-</html>
+
+</div>
+
+<!-- Contenedor para el Dashboard de Indicadores -->
+<div style="margin: 10px 0; padding: 50px; border: 1px solid #cccccc00; border-radius: 10px; background-color: #ffffffc5;">
+    <h3 style="text-align: center; color: #0a0620;">Dashboard de Indicadores</h3>
+    <div style="display: flex; justify-content: center; gap: 10px;"> <!-- Gap reducido a 10px -->
+        <!-- Panel para el gráfico de dengue -->
+        <div style="background-color: #f8f9fa00; border: 1px solid #187dacc9; border-radius: 10px; padding: 20px; margin-top: 40px;">
+            <canvas id="dengueChart" style="width: 550px; height: 400px;"></canvas> <!-- Tamaño reducido -->
+        </div>
+        <!-- Panel para el gráfico de detección -->
+        <div style="background-color: #f8f9fa00; border: 1px solid #187dacc9; border-radius: 10px; padding: 20px; margin-left: 90px; margin-top: 40px;">
+            <canvas id="detectionChart" style="width: 550px; height: 400px;"></canvas> <!-- Tamaño reducido -->
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script>
+    // Data for the dengue chart
+    const dengueData = {
+        labels: ['Dengue Grave', 'Otros Resultados'],
+        datasets: [{
+            label: 'Número de Infectados',
+            data: [{{ num_dengue_grave }}, {{ num_personas_detectadas }} - {{ num_dengue_grave }}],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.8)', // Color más oscuro para Dengue Grave
+                'rgba(54, 162, 235, 0.8)'  // Color más oscuro para Otros Resultados
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1 // Grosor del borde reducido
+        }]
+    };
+
+    // Configuration for the dengue chart
+    // Configuration for the dengue chart
+const ctxDengue = document.getElementById('dengueChart').getContext('2d');
+const dengueChart = new Chart(ctxDengue, {
+    type: 'bar',
+    data: dengueData,
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: '#0c2647' // Color de las líneas de la cuadrícula
+                }
+            },
+            x: {
+                grid: {
+                    color: '#0c2647' // Color de las líneas de la cuadrícula
+                },
+                // Ajustar el ancho de las barras
+                ticks: {
+                    autoSkip: true // Para asegurarte de que las etiquetas no se recorten
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: 'black' // Color del texto de la leyenda
+                }
+            },
+            datalabels: {
+                anchor: 'end',
+                align: 'end',
+                formatter: (value) => value,
+                color: 'black', // Cambiar color de las etiquetas de datos
+            }
+        },
+        elements: {
+            bar: {
+                borderWidth: 2, // Grosor del borde de las barras
+                barThickness: 10, // Ancho de las barras (ajusta este valor)
+            }
+        },
+        backgroundColor: '#343a40' // Color de fondo del gráfico
+    }
+});
+    // Data for the detection chart
+    const detectionData = {
+        labels: ['Total Detectados', 'No Detectados'],
+        datasets: [{
+            label: 'Número de Personas Detectadas',
+            data: [{{ num_personas_detectadas }}, 100 - {{ num_personas_detectadas }}],
+            backgroundColor: [
+                'rgba(75, 192, 192, 0.8)', // Color más oscuro para Total Detectados
+                'rgba(255, 206, 86, 0.8)'   // Color más oscuro para No Detectados
+            ],
+            borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 2
+        }]
+    };
+
+    // Configuration for the detection chart
+    const ctxDetection = document.getElementById('detectionChart').getContext('2d');
+    const detectionChart = new Chart(ctxDetection, {
+        type: 'pie',
+        data: detectionData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Permitir que el gráfico se ajuste al tamaño del canvas
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: 'black', // Color del texto de la leyenda
+                        padding: 5, // Ajustar el padding para acercar la leyenda al gráfico
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Distribución de Personas Detectadas',
+                    color: 'black' // Color del título
+                },
+                datalabels: {
+                    formatter: (value) => value,
+                    color: 'black', // Cambiar color de las etiquetas de datos
+                }
+            },
+            backgroundColor: '#343a40' // Color de fondo del gráfico
+        }
+    });
+
+    function mostrarFormulario(historialId) {
+        document.getElementById('historial_id').value = historialId;  // Establece el ID del historial en el campo oculto
+        document.getElementById('overlay').style.display = 'block'; // Mostrar fondo oscuro
+        document.getElementById('form-panel').style.display = 'block'; // Mostrar panel del formulario
+    }
+
+    function cerrarPanel() {
+        document.getElementById('overlay').style.display = 'none'; // Ocultar fondo oscuro
+        document.getElementById('form-panel').style.display = 'none'; // Ocultar panel del formulario
+        document.getElementById('notification-panel').style.display = 'none'; // Ocultar panel de notificación
+    }
+
+    function verDetalles(historialId) {
+        // Leer el resultado de la tabla
+        const resultadoCell = document.querySelector(`tr[data-id="${historialId}"] td:nth-child(15)`); // Cambiar a la columna "Resultado"
+
+        if (!resultadoCell) {
+            console.error("No se encontró la celda del resultado.");
+            return;
+        }
+
+        const resultado = resultadoCell.innerText.trim(); // Obtener el texto del resultado
+
+        let mensaje;
+        let contenido;
+
+        // Mostrar en la consola el resultado leído para depuración
+        console.log(`Resultado leído: ${resultado}`);
+
+        if (resultado === "Dengue Grave") {
+            mensaje = "♦ Acude de inmediato a un centro de salud o médico.<br>" +
+                      "♦ Mantente hidratado.<br>" +
+                      "♦ Toma medicamentos recetados por tu médico, no te automediques.";
+            contenido = `<strong>Recomendaciones:</strong><br>${mensaje}`;
+            document.getElementById('notification-panel').style.backgroundColor = "red";
+        } else if (resultado === "Positivo") {
+            mensaje = `<span style="color: black;">♦ Mantente bien hidratado, bebiendo suficiente agua y electrolitos.<br>
+                    ♦ Descansa adecuadamente y evita el esfuerzo físico.<br>
+                    ♦ Monitorea tus síntomas y busca atención médica si experimentas un aumento en la fiebre, dolor abdominal intenso o síntomas de deshidratación.<br>
+                    ♦ Regresa para un control si los síntomas persisten o empeoran.</span>`;
+            contenido = `<strong style="color: black;">Recomendaciones:</strong><br>${mensaje}`;
+            document.getElementById('notification-panel').style.backgroundColor = "yellow";
+        } else if (resultado === "Negativo") {
+            mensaje = "♦ Mantén una buena hidratación.<br>" +
+                      "♦ Si presentas síntomas persistentes, como fiebre o malestar, consulta a tu médico para una evaluación adicional.<br>" +
+                      "♦ Realiza un seguimiento regular de tu salud y no dudes en regresar si tienes dudas.";
+            contenido = `<strong>Recomendaciones:</strong><br>${mensaje}`;
+            document.getElementById('notification-panel').style.backgroundColor = "green";
+        } else {
+            mensaje = `El resultado recibido es: <strong>${resultado}</strong>.`;
+            contenido = `<strong>Recomendaciones:</strong><br>Por favor, consulta a tu médico para más información.<br>${mensaje}`;
+            document.getElementById('notification-panel').style.backgroundColor = "gray";
+        }
+
+        const notificationPanel = document.getElementById('notification-panel');
+        notificationPanel.innerHTML = `${contenido}<br><button class="panelreco" onclick="cerrarPanel()">Aceptar</button>`; // Añadir botón "Aceptar"
+        notificationPanel.style.display = 'block';
+    }
+</script>
 {% endblock %}
