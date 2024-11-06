@@ -81,8 +81,12 @@ WSGI_APPLICATION = 'proytesis.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # Motor de base de datos
-        'NAME': BASE_DIR / 'db.sqlite3',         # Ruta del archivo de la base de datos
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dengueproy',
+        'USER': 'dengueproy_dqak_user',
+        'PASSWORD': 'TuNC0AdHPLcs6QF1QNriD7FkLjN94sQI',
+        'HOST': 'dpg-csj44vu8ii6s73cv0ac0-a.oregon-postgres.render.com',
+        'Port': '5432',
     }
 }
 database_url= os.environ.get("DATABASE_URL")
