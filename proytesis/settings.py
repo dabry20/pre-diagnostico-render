@@ -28,10 +28,6 @@ DEBUG = os.environ.get("DEBUG","False").lower()=="true"
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
-RENDER_EXTERNA_HOSTNAME= os.environ.get('RENDER_EXTERNA_HOSTNAME')
-if RENDER_EXTERNA_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNA_HOSTNAME)
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -89,8 +85,8 @@ DATABASES = {
         'Port': '5432',
     }
 }
-database_url= os.environ.get("DATABASE_URL")
-DATABASES['default']=dj_database_url.parse(database_url)
+
+DATABASES['default']=dj_database_url.parse("postgresql://dengueproy_dqak_user:TuNC0AdHPLcs6QF1QNriD7FkLjN94sQI@dpg-csklrc68ii6s73ftanbg-a.oregon-postgres.render.com/dengueproy_dqak")
 
 #postgresql://dengueproy_bys4_user:qZ7Tz2O8C9mWrAHRpz9Yd3MSRaX0wrIM@dpg-csj44vu8ii6s73cv0ac0-a.oregon-postgres.render.com/dengueproy_bys4
 
