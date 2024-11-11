@@ -75,19 +75,21 @@ WSGI_APPLICATION = 'proytesis.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dengueproy',
-        'USER': 'dengueproy_dqak_user',
-        'PASSWORD': 'TuNC0AdHPLcs6QF1QNriD7FkLjN94sQI',
-        'HOST': 'dpg-csj44vu8ii6s73cv0ac0-a.oregon-postgres.render.com',
-        'Port': '5432',
-    }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'dengueproy',
+#         'USER': 'dengueproy_dqak_user',
+#         'PASSWORD': 'TuNC0AdHPLcs6QF1QNriD7FkLjN94sQI',
+#         'HOST': 'dpg-csj44vu8ii6s73cv0ac0-a.oregon-postgres.render.com',
+#         'Port': '5432',
+#     }
+# }
+
+DATABASES={
+    
+    'default':dj_database_url.parse("postgresql://dengueproy_dqak_user:TuNC0AdHPLcs6QF1QNriD7FkLjN94sQI@dpg-csklrc68ii6s73ftanbg-a.oregon-postgres.render.com/dengueproy_dqak")
 }
-
-DATABASES['default']=dj_database_url.parse("postgresql://dengueproy_dqak_user:TuNC0AdHPLcs6QF1QNriD7FkLjN94sQI@dpg-csklrc68ii6s73ftanbg-a.oregon-postgres.render.com/dengueproy_dqak")
-
 #postgresql://dengueproy_bys4_user:qZ7Tz2O8C9mWrAHRpz9Yd3MSRaX0wrIM@dpg-csj44vu8ii6s73cv0ac0-a.oregon-postgres.render.com/dengueproy_bys4
 
 # Password validation
