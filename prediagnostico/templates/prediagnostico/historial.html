@@ -157,16 +157,16 @@
         labels: ['Dengue Grave', 'Otros Resultados'],
         datasets: [{
             label: 'Número de Infectados',
-            data: [{{ num_dengue_grave }}, {{ num_personas_detectadas }} - {{ num_dengue_grave }}],
+            data: JSON.parse('{{ dados_dengue_json|safe }}'), // Asegúrate de que `dados_dengue_json` esté en el formato correcto
             backgroundColor: [
-                'rgba(255, 99, 132, 0.8)', // Color más oscuro para Dengue Grave
-                'rgba(54, 162, 235, 0.8)'  // Color más oscuro para Otros Resultados
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 162, 235, 0.8)'
             ],
             borderColor: [
                 'rgba(255, 99, 132, 1)',
                 'rgba(54, 162, 235, 1)'
             ],
-            borderWidth: 1 // Grosor del borde reducido
+            borderWidth: 1
         }]
     };
 
@@ -219,14 +219,15 @@ const dengueChart = new Chart(ctxDengue, {
     }
 });
     // Data for the detection chart
+  
     const detectionData = {
         labels: ['Total Detectados', 'No Detectados'],
         datasets: [{
             label: 'Número de Personas Detectadas',
-            data: [{{ num_personas_detectadas }}, 100 - {{ num_personas_detectadas }}],
+            data: JSON.parse('{{ detection_data_json|safe }}'), // Asegúrate de que detection_data_json esté en formato de lista
             backgroundColor: [
-                'rgba(75, 192, 192, 0.8)', // Color más oscuro para Total Detectados
-                'rgba(255, 206, 86, 0.8)'   // Color más oscuro para No Detectados
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(255, 206, 86, 0.8)'
             ],
             borderColor: [
                 'rgba(75, 192, 192, 1)',
@@ -235,6 +236,7 @@ const dengueChart = new Chart(ctxDengue, {
             borderWidth: 2
         }]
     };
+
 
     // Configuration for the detection chart
     const ctxDetection = document.getElementById('detectionChart').getContext('2d');
