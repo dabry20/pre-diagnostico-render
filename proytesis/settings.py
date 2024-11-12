@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG","False").lower()=="true"
-
+# ALLOWED_HOSTS =[]
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
 # Application definition
@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'proytesis.wsgi.application'
 # }
 
 DATABASES={
-    
+
     'default':dj_database_url.parse("postgresql://dengueproy_dqak_user:TuNC0AdHPLcs6QF1QNriD7FkLjN94sQI@dpg-csklrc68ii6s73ftanbg-a.oregon-postgres.render.com/dengueproy_dqak")
 }
 #postgresql://dengueproy_bys4_user:qZ7Tz2O8C9mWrAHRpz9Yd3MSRaX0wrIM@dpg-csj44vu8ii6s73cv0ac0-a.oregon-postgres.render.com/dengueproy_bys4
