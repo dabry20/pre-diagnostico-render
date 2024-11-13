@@ -132,23 +132,23 @@
             {% endfor %}
         </tbody>
     </table>
+
 </div>
 
 <!-- Contenedor para el Dashboard de Indicadores -->
 <div style="margin: 10px 0; padding: 50px; border: 1px solid #cccccc00; border-radius: 10px; background-color: #ffffffc5;">
     <h3 style="text-align: center; color: #0a0620;">Dashboard de Indicadores</h3>
-    <div style="display: flex; justify-content: center; gap: 10px;">
+    <div style="display: flex; justify-content: center; gap: 10px;"> <!-- Gap reducido a 10px -->
         <!-- Panel para el gráfico de dengue -->
         <div style="background-color: #f8f9fa00; border: 1px solid #187dacc9; border-radius: 10px; padding: 20px; margin-top: 40px;">
-            <canvas id="dengueChart" style="width: 550px; height: 400px;"></canvas>
+            <canvas id="dengueChart" style="width: 550px; height: 400px;"></canvas> <!-- Tamaño reducido -->
         </div>
         <!-- Panel para el gráfico de detección -->
         <div style="background-color: #f8f9fa00; border: 1px solid #187dacc9; border-radius: 10px; padding: 20px; margin-left: 90px; margin-top: 40px;">
-            <canvas id="detectionChart" style="width: 550px; height: 400px;"></canvas>
+            <canvas id="detectionChart" style="width: 550px; height: 400px;"></canvas> <!-- Tamaño reducido -->
         </div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <script>
@@ -171,61 +171,59 @@
     };
 
     // Configuration for the dengue chart
-    const ctxDengue = document.getElementById('dengueChart').getContext('2d');
-    const dengueChart = new Chart(ctxDengue, {
-        type: 'bar',
-        data: dengueData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: '#0c2647' // Color de las líneas de la cuadrícula
-                    }
+    // Configuration for the dengue chart
+const ctxDengue = document.getElementById('dengueChart').getContext('2d');
+const dengueChart = new Chart(ctxDengue, {
+    type: 'bar',
+    data: dengueData,
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: '#0c2647' // Color de las líneas de la cuadrícula
+                }
+            },
+            x: {
+                grid: {
+                    color: '#0c2647' // Color de las líneas de la cuadrícula
                 },
-                x: {
-                    grid: {
-                        color: '#0c2647' // Color de las líneas de la cuadrícula
-                    },
-                    ticks: {
-                        autoSkip: true // Para asegurarte de que las etiquetas no se recorten
-                    }
+                // Ajustar el ancho de las barras
+                ticks: {
+                    autoSkip: true // Para asegurarte de que las etiquetas no se recorten
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: 'black' // Color del texto de la leyenda
                 }
             },
-            plugins: {
-                legend: {
-                    labels: {
-                        color: 'black' // Color del texto de la leyenda
-                    }
-                },
-                datalabels: {
-                    anchor: 'end',
-                    align: 'end',
-                    formatter: (value) => value,
-                    color: 'black', // Cambiar color de las etiquetas de datos
-                }
-            },
-            elements: {
-                bar: {
-                    borderWidth: 2, // Grosor del borde de las barras
-                    barThickness: 10, // Ancho de las barras (ajusta este valor)
-                }
-            },
-            backgroundColor: '#343a40' // Color de fondo del gráfico
-        }
-    });
-
+            datalabels: {
+                anchor: 'end',
+                align: 'end',
+                formatter: (value) => value,
+                color: 'black', // Cambiar color de las etiquetas de datos
+            }
+        },
+        elements: {
+            bar: {
+                borderWidth: 2, // Grosor del borde de las barras
+                barThickness: 10, // Ancho de las barras (ajusta este valor)
+            }
+        },
+        backgroundColor: '#343a40' // Color de fondo del gráfico
+    }
+});
     // Data for the detection chart
     const detectionData = {
         labels: ['Total Detectados', 'No Detectados'],
         datasets: [{
             label: 'Número de Personas Detectadas',
-            data: [
-                {{ num_personas_detectadas }},
-                100 - {{ num_personas_detectadas }}  // Asegúrate de que num_personas_detectadas esté en el rango correcto
-            ],
+            data: [{{ num_personas_detectadas }}, 100 - {{ num_personas_detectadas }}],
             backgroundColor: [
                 'rgba(75, 192, 192, 0.8)', // Color más oscuro para Total Detectados
                 'rgba(255, 206, 86, 0.8)'   // Color más oscuro para No Detectados

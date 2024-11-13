@@ -22,11 +22,10 @@ import dj_database_url
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
-
+DEBUG=os.environ.get("DEBUG","FALSE").lower()=="true"
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG","False").lower()=="true"
-# ALLOWED_HOSTS =[]
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+
+
 
 # Application definition
 
@@ -85,7 +84,6 @@ WSGI_APPLICATION = 'proytesis.wsgi.application'
 #         'Port': '5432',
 #     }
 # }
-
 DATABASES={
 
     'default':dj_database_url.parse("postgresql://dengueproy_dqak_user:TuNC0AdHPLcs6QF1QNriD7FkLjN94sQI@dpg-csklrc68ii6s73ftanbg-a.oregon-postgres.render.com/dengueproy_dqak")
