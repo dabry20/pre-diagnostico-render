@@ -45,7 +45,7 @@ class Examen(models.Model):
     Dolor_de_cabeza=models.BooleanField()
     Erupcion_cutanea_sarpullido=models.BooleanField()
     Nauseas_vomitos=models.BooleanField()
-    Dolor_abdominal_intenso=models.BooleanField()
+    Dolor_abdominal_intenso=models.BooleanField(null=True)
     Vomitos_persistentes=models.BooleanField( null=True)
     Sangrado_mucosas_y_encias=models.BooleanField( null=True)
     Somnolencia_irritabilidad=models.BooleanField( null=True)
