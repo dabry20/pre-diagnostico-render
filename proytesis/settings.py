@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'proytesis.wsgi.application'
 # }
 DATABASES={
 
-    'default':dj_database_url.parse("postgresql://dengueproy_dqak_user:TuNC0AdHPLcs6QF1QNriD7FkLjN94sQI@dpg-csklrc68ii6s73ftanbg-a.oregon-postgres.render.com/dengueproy_dqak")
+    'default':dj_database_url.parse("postgresql://proyetest_user:8H4ah2JVdSq9wphKvd4nVjwMRk04Ms7J@dpg-ctd1q7pu0jms73ct3ee0-a.oregon-postgres.render.com/proyetest")
 }
 #postgresql://dengueproy_bys4_user:qZ7Tz2O8C9mWrAHRpz9Yd3MSRaX0wrIM@dpg-csj44vu8ii6s73cv0ac0-a.oregon-postgres.render.com/dengueproy_bys4
 
